@@ -8,10 +8,9 @@ public class Tester2 : MonoBehaviour
     {
         Debug.Log("onTriggerEnter2D");
         
-        //Gravity Switch
-        other.gameObject.GetComponent<Rigidbody2D>().gravityScale = -1 * other.gameObject.GetComponent<Rigidbody2D>().gravityScale ;
-        
-        //Grate Settings
-        other.gameObject.layer = LayerMask.NameToLayer("Default");
+        other.gameObject.GetComponent<SimpleMove>().shift_phase_DOWN();
+        //Turn off phase shift pad
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
     }
 }
