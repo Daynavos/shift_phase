@@ -11,6 +11,7 @@ public class SimpleMove : MonoBehaviour
     
     public Phase phase;
     public float speed = 5f;
+    public float mass = 1f;
     
     
     private Color ice_color = Color.cyan;
@@ -32,7 +33,7 @@ public class SimpleMove : MonoBehaviour
     void Update()
     {
         float move = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.right * move * speed * Time.deltaTime);
+        transform.Translate(Vector3.right * (move * speed * Time.deltaTime));
     }
 
     public void shift_phase_UP()
@@ -93,7 +94,8 @@ public class SimpleMove : MonoBehaviour
     public void acquire_mass()
     {
         transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
-        
+        mass += 1f;
+
     }
     
 }
