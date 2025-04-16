@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 public class SimpleMove : MonoBehaviour
 {
@@ -26,7 +25,7 @@ public class SimpleMove : MonoBehaviour
     {
         ice_layer = LayerMask.NameToLayer("Default");
         water_layer = LayerMask.NameToLayer("Water");
-        steam_layer = LayerMask.NameToLayer("Default");
+        steam_layer = LayerMask.NameToLayer("Steam");
         
         make_water();
     }
