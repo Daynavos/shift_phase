@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class startFall : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject moveInfo;
+    public GameObject player;
+    void OnCollisionEnter2D(Collision2D collision)
     {
+        StartCoroutine(TutInfo());
+        GetComponent<CircleCollider2D>().enabled = false;
+        GetComponent<SpriteRenderer>().enabled = false;
+
+        player.SetActive(true);
         
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    IEnumerator TutInfo()
     {
+        yield return new WaitForSeconds(1);
+        moveInfo.SetActive(true);
         
+        Destroy(gameObject);
     }
 }

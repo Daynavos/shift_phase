@@ -167,7 +167,7 @@ MonoBehaviour:
   speed: 5
   mass: 1
   rb: {fileID: 6071035140347864785}
-  jumpAmount: 5.3
+  jumpAmount: 8.3
   distanceToCheck: 0.5
   isGrounded: 0
   groundLayer:
