@@ -4,12 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 public class SimpleMove : MonoBehaviour
 {
+    public GameObject levelSceneManObj;
+    public LevelSceneMan levelSceneMan;
     public enum Phase
     {
         Ice,
         Water,
         Steam
     }
+    
+    public GameObject pauseScreen;
+    
+    public int starCount = 0;
     
     public Phase phase;
     public float speed = 5f;
@@ -27,6 +33,8 @@ public class SimpleMove : MonoBehaviour
 
     private Collider2D playerCollider;
     
+    public string nextSceneName;
+    
     void Start()
     {
         ice_layer = LayerMask.NameToLayer("Default");
@@ -36,6 +44,9 @@ public class SimpleMove : MonoBehaviour
         make_water();
         
         playerCollider = GetComponent<Collider2D>();
+
+        levelSceneMan = levelSceneManObj.GetComponent<LevelSceneMan>();
+        starCount = 0;
     }
     
     public Rigidbody2D rb;
@@ -55,6 +66,11 @@ public class SimpleMove : MonoBehaviour
     private float dashingCooldown = 1f;
     void Update()
     {
+        if (starCount == 3)
+        {
+            levelSceneMan.LoadScene(nextSceneName);
+        }
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jumpPressed = true;
@@ -66,7 +82,13 @@ public class SimpleMove : MonoBehaviour
             StartCoroutine(Dash());
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pauseScreen.SetActive(true);
+        }
+
     }
+    
 
     void FixedUpdate()
     {
@@ -157,7 +179,20 @@ public class SimpleMove : MonoBehaviour
         mass += 1f;
 
     }
-    
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("star"))
+        {
+            starCount++;
+            other.gameObject.SetActive(false);
+        }
+
+        if (other.gameObject.CompareTag("spike"))
+        {
+            levelSceneMan.ReloadScene();
+        }
+    }
     private IEnumerator Dash()
     {
         canDash = false;
