@@ -1,4 +1,6 @@
 
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 public class SimpleMove : MonoBehaviour
 {
@@ -44,32 +46,41 @@ public class SimpleMove : MonoBehaviour
     public LayerMask groundLayer; // Set this in the Inspector
 
     private bool jumpPressed = false;
+    
+    private bool canDash = true;
+    public bool isDashing;
+    private float dashingPower = 12f;
+    private float dashingTime = 0.2f;
+    private float dashingCooldown = 1f;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jumpPressed = true;
         }
+        
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            
+            StartCoroutine(Dash());
+        }
+
     }
 
     void FixedUpdate()
     {
-        // Movement
-        float move = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(move * speed, rb.velocity.y);
+        if (!isDashing)
+        {
+            // Movement
+            float move = Input.GetAxis("Horizontal");
+            rb.velocity = new Vector2(move * speed, rb.velocity.y);
+        }
 
         // Ground check
         Vector2 origin = new Vector2(transform.position.x, transform.position.y - 0.501f);
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, distanceToCheck);
-        
-        if (hit.collider != null)
-        {
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-        }
+
+        isGrounded = hit.collider != null;
 
         // Jumping
         if (jumpPressed && isGrounded)
@@ -77,11 +88,11 @@ public class SimpleMove : MonoBehaviour
             rb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
         }
 
-        jumpPressed = false; // Reset input flag
-        
-        Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.green);
+        jumpPressed = false;
 
+        Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.green);
     }
+
 
     
     public void shift_phase_UP()
@@ -144,6 +155,25 @@ public class SimpleMove : MonoBehaviour
         transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
         mass += 1f;
 
+    }
+    
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        float direction = Input.GetAxisRaw("Horizontal");
+        if (direction == 0)
+            direction = transform.localScale.x >= 0 ? 1 : -1;
+
+        rb.velocity = new Vector2(direction * dashingPower, 0f);
+
+        yield return new WaitForSeconds(dashingTime);
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
     }
     
 }

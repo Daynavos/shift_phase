@@ -1,30 +1,40 @@
+using System;
 using UnityEngine;
+
 public class FanTest2 : MonoBehaviour
 {
-    public float magnitude;
-    private bool _inFanZone;
-    private Rigidbody2D _playerRb;
+    public float magnitude = 10f;
+    private bool _inFanZone = false;
+    private Rigidbody2D _playerRb = null;
+    private Vector2 fanDirection = Vector2.right;
 
-    void Start()
-    {
-        magnitude = 1f;
-    }
+
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        _playerRb = other.gameObject.GetComponent<Rigidbody2D>();
-        _inFanZone = true;
+        if (other.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
+        {
+            _playerRb = rb;
+            _inFanZone = true;
+            
+        }
     }
-    
+
     void OnTriggerExit2D(Collider2D other)
     {
-        _inFanZone = false;
+        if (other.attachedRigidbody == _playerRb)
+        {
+            _inFanZone = false;
+            _playerRb = null;
+            
+        }
     }
 
     private void FixedUpdate()
     {
-        if (_inFanZone)
+        if (_inFanZone && _playerRb != null)
         {
-            _playerRb.AddForce(Vector2.right * magnitude, ForceMode2D.Impulse);
+            _playerRb.AddForce(Vector2.left * magnitude, ForceMode2D.Force);
         }
     }
 }
