@@ -16,9 +16,10 @@ public class SimpleMove : MonoBehaviour
     public float mass = 1f;
     
     
-    private Color ice_color = Color.cyan;
-    private Color water_color = Color.blue;
-    private Color steam_color = Color.gray;
+    private Color ice_color = new Color(0.5f, 0.9f, 1.0f, 1.0f);    
+    private Color water_color = new Color(0.0f, 0.3f, 0.8f, 1.0f);  
+    private Color steam_color = new Color(0.8f, 0.8f, 0.8f, 0.5f);  
+
 
     private LayerMask ice_layer;
     private LayerMask water_layer;
