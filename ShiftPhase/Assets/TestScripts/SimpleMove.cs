@@ -35,6 +35,9 @@ public class SimpleMove : MonoBehaviour
     
     public string nextSceneName;
     
+    private float targetGravity = 1f; 
+    private float originalDashGravity; 
+
     void Start()
     {
         ice_layer = LayerMask.NameToLayer("Default");
@@ -55,7 +58,7 @@ public class SimpleMove : MonoBehaviour
     public bool isGrounded;
 
 
-    public LayerMask groundLayer; // Set this in the Inspector
+    public LayerMask groundLayer; 
 
     private bool jumpPressed = false;
     
@@ -94,7 +97,7 @@ public class SimpleMove : MonoBehaviour
     {
         if (!isDashing)
         {
-            // Movement
+            rb.gravityScale = targetGravity;
             float move = Input.GetAxis("Horizontal");
             rb.velocity = new Vector2(move * speed, rb.velocity.y);
         }
@@ -154,7 +157,7 @@ public class SimpleMove : MonoBehaviour
         phase = Phase.Ice;
         gameObject.GetComponent<SpriteRenderer>().color = ice_color;
         gameObject.layer = ice_layer;
-        gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;
+        targetGravity = 1f;
     }
 
     private void make_water()
@@ -162,7 +165,7 @@ public class SimpleMove : MonoBehaviour
         phase = Phase.Water;
         gameObject.GetComponent<SpriteRenderer>().color = water_color;
         gameObject.layer = water_layer;
-        gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;
+        targetGravity = 1f;
     }
 
     private void make_steam()
@@ -170,8 +173,9 @@ public class SimpleMove : MonoBehaviour
         phase = Phase.Steam;
         gameObject.GetComponent<SpriteRenderer>().color = steam_color;
         gameObject.layer = steam_layer;
-        gameObject.GetComponent<Rigidbody2D>().gravityScale = -1;
+        targetGravity = -1f;
     }
+
 
     public void acquire_mass()
     {
@@ -179,6 +183,12 @@ public class SimpleMove : MonoBehaviour
         mass += 1f;
 
     }
+    
+    public void SetTargetGravity(float newGravity)
+    {
+        targetGravity = newGravity;
+    }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -197,8 +207,9 @@ public class SimpleMove : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-        float originalGravity = rb.gravityScale;
+        originalDashGravity = targetGravity; 
         rb.gravityScale = 0f;
+
         float direction = Input.GetAxisRaw("Horizontal");
         if (direction == 0)
             direction = transform.localScale.x >= 0 ? 1 : -1;
@@ -206,11 +217,14 @@ public class SimpleMove : MonoBehaviour
         rb.velocity = new Vector2(direction * dashingPower, 0f);
 
         yield return new WaitForSeconds(dashingTime);
-        rb.gravityScale = originalGravity;
+
         isDashing = false;
+        rb.gravityScale = originalDashGravity;
+
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
+
     
 }
 

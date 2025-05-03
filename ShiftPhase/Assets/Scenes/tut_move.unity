@@ -3205,6 +3205,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BorderParent
       objectReference: {fileID: 0}
+    - target: {fileID: 71768320921899024, guid: e39d8355339975941904794831c81b61, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2519217457578902047, guid: e39d8355339975941904794831c81b61, type: 3}
       propertyPath: m_LocalScale.y
       value: 172.89551

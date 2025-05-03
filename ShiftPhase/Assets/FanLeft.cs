@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-public class FanTest2 : MonoBehaviour
+public class FanLeft : MonoBehaviour
 {
     public float magnitude = 500f;
     private bool _inFanZone = false;
     private Rigidbody2D _playerRb = null;
-    private Vector2 fanDirection = Vector2.right;
+    private Vector2 fanDirection = Vector2.left;
 
 
     private void Start()
