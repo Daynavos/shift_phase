@@ -6,6 +6,8 @@ TagManager:
   tags:
   - star
   - spike
+  - targetCamera
+  - levelCleared
   layers:
   - Default
   - TransparentFX

@@ -21,6 +21,7 @@ public class SimpleMove : MonoBehaviour
     public float speed = 5f;
     public float mass = 1f;
     
+    [SerializeField] private GameObject LevelCleared;
     
     private Color ice_color = new Color(0.5f, 0.9f, 1.0f, 1.0f);    
     private Color water_color = new Color(0.0f, 0.3f, 0.8f, 1.0f);  
@@ -33,13 +34,13 @@ public class SimpleMove : MonoBehaviour
 
     private Collider2D playerCollider;
     
-    public string nextSceneName;
-    
     private float targetGravity = 1f; 
     private float originalDashGravity; 
 
     void Start()
     {
+        Time.timeScale = 1f; 
+
         ice_layer = LayerMask.NameToLayer("Default");
         water_layer = LayerMask.NameToLayer("Water");
         steam_layer = LayerMask.NameToLayer("Steam");
@@ -50,14 +51,14 @@ public class SimpleMove : MonoBehaviour
 
         levelSceneMan = levelSceneManObj.GetComponent<LevelSceneMan>();
         starCount = 0;
+        
     }
     
     public Rigidbody2D rb;
     public float jumpAmount = 10;
     public float distanceToCheck=0.1f;
     public bool isGrounded;
-
-
+    
     public LayerMask groundLayer; 
 
     private bool jumpPressed = false;
@@ -66,12 +67,13 @@ public class SimpleMove : MonoBehaviour
     public bool isDashing;
     private float dashingPower = 12f;
     private float dashingTime = 0.2f;
-    private float dashingCooldown = 1f;
+    private float dashingCooldown = 0.7f;
     void Update()
     {
         if (starCount == 3)
         {
-            levelSceneMan.LoadScene(nextSceneName);
+            LevelCleared.SetActive(true);
+            Time.timeScale = 0;
         }
         
         if (Input.GetKeyDown(KeyCode.Space))
@@ -81,7 +83,6 @@ public class SimpleMove : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
-            
             StartCoroutine(Dash());
         }
 
@@ -89,7 +90,6 @@ public class SimpleMove : MonoBehaviour
         {
             pauseScreen.SetActive(true);
         }
-
     }
     
 
@@ -118,7 +118,6 @@ public class SimpleMove : MonoBehaviour
 
         Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.green);
     }
-
 
     
     public void shift_phase_UP()
