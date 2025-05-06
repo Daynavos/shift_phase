@@ -6,9 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneMan : MonoBehaviour
 {
-    public GameObject startScreen;
-    public GameObject LevelScreen;
-
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
@@ -16,8 +13,7 @@ public class SceneMan : MonoBehaviour
 
     public void levelSelect()
     {
-        startScreen.SetActive(false);
-        LevelScreen.SetActive(true);
+        LoadScene("level_select");
     }
 
     public void quitGame()
