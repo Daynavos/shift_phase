@@ -23,9 +23,9 @@ public class SimpleMove : MonoBehaviour
     
     [SerializeField] private GameObject LevelCleared;
     
-    private Color ice_color = new Color(0.5f, 0.9f, 1.0f, 1.0f);    
-    private Color water_color = new Color(0.0f, 0.3f, 0.8f, 1.0f);  
-    private Color steam_color = new Color(0.8f, 0.8f, 0.8f, 0.5f);  
+    public Sprite iceSprite;
+    public Sprite waterSprite;
+    public Sprite steamSprite;
 
 
     private LayerMask ice_layer;
@@ -68,12 +68,16 @@ public class SimpleMove : MonoBehaviour
     private float dashingPower = 12f;
     private float dashingTime = 0.2f;
     private float dashingCooldown = 0.7f;
+    
+    public AudioClip starSound;
+    
     void Update()
     {
         if (starCount == 3)
         {
             LevelCleared.SetActive(true);
             Time.timeScale = 0;
+            
         }
         
         if (Input.GetKeyDown(KeyCode.Space))
@@ -100,13 +104,26 @@ public class SimpleMove : MonoBehaviour
             rb.gravityScale = targetGravity;
             float move = Input.GetAxis("Horizontal");
             rb.velocity = new Vector2(move * speed, rb.velocity.y);
+
+            // Flip sprite based on movement direction
+            if (move > 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+            }
+            else if (move < 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+            }
         }
 
         // Ground check
-        Vector2 origin = new Vector2(transform.position.x, transform.position.y - 0.501f);
+
+        Bounds bounds = playerCollider.bounds;
+        Vector2 origin = new Vector2(bounds.center.x, bounds.min.y - 0.01f);
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, distanceToCheck);
 
         isGrounded = hit.collider != null;
+
 
         // Jumping
         if (jumpPressed && isGrounded)
@@ -118,6 +135,7 @@ public class SimpleMove : MonoBehaviour
 
         Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.green);
     }
+
 
     
     public void shift_phase_UP()
@@ -154,7 +172,7 @@ public class SimpleMove : MonoBehaviour
     private void make_ice()
     {
         phase = Phase.Ice;
-        gameObject.GetComponent<SpriteRenderer>().color = ice_color;
+        gameObject.GetComponent<SpriteRenderer>().sprite = iceSprite;
         gameObject.layer = ice_layer;
         targetGravity = 1f;
     }
@@ -162,7 +180,7 @@ public class SimpleMove : MonoBehaviour
     private void make_water()
     {
         phase = Phase.Water;
-        gameObject.GetComponent<SpriteRenderer>().color = water_color;
+        gameObject.GetComponent<SpriteRenderer>().sprite = waterSprite;
         gameObject.layer = water_layer;
         targetGravity = 1f;
     }
@@ -170,7 +188,7 @@ public class SimpleMove : MonoBehaviour
     private void make_steam()
     {
         phase = Phase.Steam;
-        gameObject.GetComponent<SpriteRenderer>().color = steam_color;
+        gameObject.GetComponent<SpriteRenderer>().sprite = steamSprite;
         gameObject.layer = steam_layer;
         targetGravity = -1f;
     }
@@ -195,6 +213,7 @@ public class SimpleMove : MonoBehaviour
         {
             starCount++;
             other.gameObject.SetActive(false);
+            AudioSource.PlayClipAtPoint(starSound, transform.position);
         }
 
         if (other.gameObject.CompareTag("spike"))

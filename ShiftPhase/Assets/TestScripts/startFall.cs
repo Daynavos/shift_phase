@@ -6,7 +6,6 @@ public class startFall : MonoBehaviour
 {
     public GameObject moveInfo;
     public GameObject player;
-    public GameObject eye1, eye2;
     void OnCollisionEnter2D(Collision2D collision)
     {
         StartCoroutine(TutInfo());
@@ -14,8 +13,6 @@ public class startFall : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = false;
 
         player.GetComponent<SpriteRenderer>().enabled = true;
-        eye1.GetComponent<SpriteRenderer>().enabled = true;
-        eye2.GetComponent<SpriteRenderer>().enabled = true;
         
     }
     

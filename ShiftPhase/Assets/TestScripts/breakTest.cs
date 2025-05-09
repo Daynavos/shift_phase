@@ -3,6 +3,8 @@ using UnityEngine;
 public class BreakTest : MonoBehaviour
 {
     [SerializeField] private float _obstacleMass;
+    public AudioClip breakSound; 
+    public AudioClip CantBreakSound; 
     
     void OnCollisionEnter2D(Collision2D other)
     {
@@ -13,6 +15,11 @@ public class BreakTest : MonoBehaviour
         if (playerMass >= _obstacleMass && phase == SimpleMove.Phase.Ice && isDashing )
         {
             Destroy(gameObject);
+            AudioSource.PlayClipAtPoint(breakSound, transform.position);
+        }
+        else if (isDashing)
+        {
+            AudioSource.PlayClipAtPoint(CantBreakSound, transform.position);
         }
     }
 }

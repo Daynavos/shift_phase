@@ -10,7 +10,9 @@ public class SwitchFan : MonoBehaviour
     public BoxCollider2D fanCollider;
     private BoxCollider2D _switchCollider;
     private SpriteRenderer _switchSpriteRenderer;
-
+    public AudioClip clickSound;
+    public Sprite offSprite;
+    public GameObject particleSystem;
     private void Start()
     {
         _switchSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -34,12 +36,18 @@ public class SwitchFan : MonoBehaviour
             fanCollider.enabled = false;
             _switchCollider.enabled = false;
             _switchSpriteRenderer.color = Color.gray;
+            AudioSource.PlayClipAtPoint(clickSound, transform.position);
+            GetComponent<SpriteRenderer>().sprite = offSprite;
+            particleSystem.SetActive(false);
         }
         else
         {
             fanCollider.enabled = true;
             _switchCollider.enabled = false;
             _switchSpriteRenderer.color = Color.gray;
+            AudioSource.PlayClipAtPoint(clickSound, transform.position);
+            GetComponent<SpriteRenderer>().sprite = offSprite;
+            particleSystem.SetActive(false);
         }
     }
     private void Update()
